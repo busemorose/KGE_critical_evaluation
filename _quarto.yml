@@ -1,0 +1,33 @@
+date: today
+author: "Guillaume Cinkus"
+project:
+  execute-dir: project
+      
+execute:
+  include: true
+  eval: true
+  echo: false
+  error: false
+  warning: false
+  message: false
+
+format:
+  docx:
+    reference-doc: template.docx
+    number-sections: false
+    toc: true
+    toc-depth: 3
+  html:
+    embed-resources: true
+    smooth-scroll: true
+    toc: true
+    toc-location: left
+    fig-width: 8
+    fig-height: 7
+    theme:
+      light: flatly
+      dark: darkly
+    
+bibliography: ref.bib
+csl: jhydrol.csl
+citeproc: true
