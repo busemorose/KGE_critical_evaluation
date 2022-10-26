@@ -1,8 +1,6 @@
 Technical note: When best is the enemy of good – critical evaluation of
 performance criteria in hydrological models
 ================
-Guillaume Cinkus, Naomi Mazzilli, Hervé Jourde, Andreas Wunsch, Tanja
-Liesch, Nataša Ravbar, Zhao Chen, and Nico Goldscheider
 
 - <a href="#author-orcids" id="toc-author-orcids">Author ORCIDs</a>
 - <a href="#description" id="toc-description">Description</a>
