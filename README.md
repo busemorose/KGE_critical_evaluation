@@ -41,21 +41,28 @@ performance criteria in hydrological models
 
 This repository contains the following elements:
 
-- `/script/utils.R` custom scripts for some performance criterion
+- `/script/utils.R` Custom functions for KGE<sub>NP</sub>, KGE’’, LME,
+  LCE and NSE
+- `/script/run_eval.R` Function to calculate performance criteria
+  values:
   - KGE and KGE’: *hydroGOF* R package (Zambrano-Bigiarini, 2020)
   - KGE<sub>NP</sub>: supplementary material from Pool et al. (2018)
   - DE’: *diag-eff* Python package (Schwemmle et al., 2021)
   - d<sub>r</sub>: *HydroErr* Python package (Roberts et al., 2018)
   - KGE’’, LME, LCE and NSE: custom code
   - KGE_sf: custom code for using KGE with scaling factors
-- `/script/run_eval.R`
-- `/script/Synthetic time series`
-  - `syn_flood_event.R`: Synthetic time series of a flood event (syn1)
-    or two consecutive flood events (syn2).
-- `/script/ANN model`: ANN model code
+- `/script/cblind_bw_palette.R` Color palette adapted for color vision
+  deficiencies and black/white printing
+- `/script/Synthetic time series` Synthetic time series code
+  - `syn_flood_event.R` Synthetic time series of a flood event (syn1) or
+    two consecutive flood events (syn2)
+  - `compare_score_param.R` R code to generate Figure 3
+  - `plot_model_distribution.R` R code to generate Figure 4
+  - `plot_omega_vs_omega2.R` R code to generate Figure 5
+- `/script/ANN model` ANN model code
   - Python script to run the ANN model
   - Dummy data file to illustrate the structure of input data
-- `/script/Reservoir model`: Reservoir model code
+- `/script/Reservoir model` Reservoir model code
   - KarstMod `.properties` file
   - R script to perform the snow routine
 
