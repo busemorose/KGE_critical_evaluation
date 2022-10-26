@@ -4,10 +4,12 @@ performance criteria in hydrological models
 Guillaume Cinkus, Naomi Mazzilli, Hervé Jourde, Andreas Wunsch, Tanja
 Liesch, Nataša Ravbar, Zhao Chen, and Nico Goldscheider
 
+- <a href="#author-orcids" id="toc-author-orcids">Author ORCIDs</a>
 - <a href="#description" id="toc-description">Description</a>
 - <a href="#prerequisites" id="toc-prerequisites">Prerequisites</a>
 - <a href="#synthetic-time-series"
   id="toc-synthetic-time-series">Synthetic time series</a>
+  - <a href="#general" id="toc-general">General</a>
   - <a href="#figure-1" id="toc-figure-1">Figure 1</a>
   - <a href="#figure-2" id="toc-figure-2">Figure 2</a>
   - <a href="#figure-3" id="toc-figure-3">Figure 3</a>
@@ -19,7 +21,7 @@ Liesch, Nataša Ravbar, Zhao Chen, and Nico Goldscheider
   - <a href="#anns" id="toc-anns">ANNs</a>
 - <a href="#references" id="toc-references">References</a>
 
-Author ORCIDs:
+# Author ORCIDs
 
 - Guillaume Cinkus
   [0000-0002-2877-6551](https://orcid.org/0000-0002-2877-6551)
@@ -68,6 +70,7 @@ library(hydroGOF) # for KGE and KGE'
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(cowplot)
 
 # Python packages
 de <- reticulate::import("de") # diaf-eff Python package
@@ -80,6 +83,8 @@ source("script/cblind_bw_palette.R")
 ```
 
 # Synthetic time series
+
+## General
 
 ``` r
 # Import synthetic time series of flood events
@@ -103,6 +108,7 @@ omega_max <- 10^(omega_log_max)
 model_min <- c(syn2$discharge * omega_min)
 model_max <- c(syn2$discharge * omega_max)
 
+# Generate plot
 syn2 |> 
   mutate(model_min, model_max) |> 
   ggplot(aes(t, discharge)) +
@@ -116,17 +122,75 @@ syn2 |>
   ylab(expression(paste("Discharge [L"^3~T^-1, "]"))) +
   coord_cartesian(xlim = c(0, 40)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-  theme_bw(base_size = 16) +
+  theme_bw() +
   theme(legend.position = "bottom",
         panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank(),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        strip.text = element_text(size = 10),
+        legend.text = element_text(size = 10))
 ```
 
 <img src="img/figure01.png" id="fig-fig01" />
 
 ## Figure 2
 
+``` r
+# Define omega values
+omega_1 <- 0.75
+omega_2 <- 1.2
+
+# Create two transformed time series
+model_bad_bad <- c(syn1$discharge * omega_1, syn1$discharge * omega_2)
+model_bad_good <- c(syn1$discharge * omega_1, syn1$discharge)
+
+# Generate plot
+syn2 |>
+  mutate(model_bad_bad, model_bad_good) |> 
+  pivot_longer(c("model_bad_bad", "model_bad_good")) |> 
+  ggplot() +
+  geom_point(aes(x = t, y = discharge, shape = "Reference time series")) +
+  geom_line(aes(x = t, y = value, color = "Transformed time series")) +
+  facet_wrap(~name, 
+             labeller = as_labeller(c("model_bad_bad" = '"Bad-Bad" model (BB model)', 
+                                      "model_bad_good" = '"Bad-Good" model (BG model)'))) +
+  coord_cartesian(xlim = c(0, 40)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  scale_shape_manual(name = "", values = 4) +
+  scale_color_manual(name = "", values = "#696969") +
+  xlab("Time [T]") +
+  ylab(expression(paste("Discharge [L"^3~T^-1, "]"))) +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        strip.text = element_text(size = 10),
+        legend.text = element_text(size = 10))
+```
+
+<img src="img/figure02.png" id="fig-fig02" />
+
 ## Figure 3
+
+``` r
+source("script/Synthetic time series/compare_score_param.R")
+
+# Define omega values
+omega_1 <- 0.75
+omega_2 <- 1.2
+
+# Create two transformed time series
+model_bad_bad <- c(syn1$discharge * omega_1, syn1$discharge * omega_2)
+model_bad_good <- c(syn1$discharge * omega_1, syn1$discharge)
+
+# Generate plot
+compare_score_param(syn2$discharge, model_bad_bad, model_bad_good)
+```
+
+<img src="img/figure03.png" id="fig-fig03" />
 
 ## Figure 4
 

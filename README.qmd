@@ -9,7 +9,7 @@ execute:
   eval: false
 ---
 
-Author ORCIDs:
+# Author ORCIDs
 
 - Guillaume Cinkus [0000-0002-2877-6551](https://orcid.org/0000-0002-2877-6551)
 - Naomi Mazzilli [0000-0002-9145-5160](https://orcid.org/0000-0002-9145-5160)
@@ -50,6 +50,7 @@ library(hydroGOF) # for KGE and KGE'
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(cowplot)
 
 # Python packages
 de <- reticulate::import("de") # diaf-eff Python package
@@ -68,6 +69,8 @@ de <- reticulate::py_run_file("script/de.py")
 ```
     
 # Synthetic time series
+
+## General
 
 ```{r}
 # Import synthetic time series of flood events
@@ -91,6 +94,7 @@ omega_max <- 10^(omega_log_max)
 model_min <- c(syn2$discharge * omega_min)
 model_max <- c(syn2$discharge * omega_max)
 
+# Generate plot
 syn2 |> 
   mutate(model_min, model_max) |> 
   ggplot(aes(t, discharge)) +
@@ -104,17 +108,75 @@ syn2 |>
   ylab(expression(paste("Discharge [L"^3~T^-1, "]"))) +
   coord_cartesian(xlim = c(0, 40)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-  theme_bw(base_size = 16) +
+  theme_bw() +
   theme(legend.position = "bottom",
         panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank(),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        strip.text = element_text(size = 10),
+        legend.text = element_text(size = 10))
 ```
 
 ![](img/figure01.png){#fig-fig01}
 
 ## Figure 2
 
+```{r}
+# Define omega values
+omega_1 <- 0.75
+omega_2 <- 1.2
+
+# Create two transformed time series
+model_bad_bad <- c(syn1$discharge * omega_1, syn1$discharge * omega_2)
+model_bad_good <- c(syn1$discharge * omega_1, syn1$discharge)
+
+# Generate plot
+syn2 |>
+  mutate(model_bad_bad, model_bad_good) |> 
+  pivot_longer(c("model_bad_bad", "model_bad_good")) |> 
+  ggplot() +
+  geom_point(aes(x = t, y = discharge, shape = "Reference time series")) +
+  geom_line(aes(x = t, y = value, color = "Transformed time series")) +
+  facet_wrap(~name, 
+             labeller = as_labeller(c("model_bad_bad" = '"Bad-Bad" model (BB model)', 
+                                      "model_bad_good" = '"Bad-Good" model (BG model)'))) +
+  coord_cartesian(xlim = c(0, 40)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  scale_shape_manual(name = "", values = 4) +
+  scale_color_manual(name = "", values = "#696969") +
+  xlab("Time [T]") +
+  ylab(expression(paste("Discharge [L"^3~T^-1, "]"))) +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        strip.text = element_text(size = 10),
+        legend.text = element_text(size = 10))
+```
+
+![](img/figure02.png){#fig-fig02}
+
 ## Figure 3
+
+```{r}
+source("script/Synthetic time series/compare_score_param.R")
+
+# Define omega values
+omega_1 <- 0.75
+omega_2 <- 1.2
+
+# Create two transformed time series
+model_bad_bad <- c(syn1$discharge * omega_1, syn1$discharge * omega_2)
+model_bad_good <- c(syn1$discharge * omega_1, syn1$discharge)
+
+# Generate plot
+compare_score_param(syn2$discharge, model_bad_bad, model_bad_good)
+```
+
+![](img/figure03.png){#fig-fig03}
 
 ## Figure 4
 
