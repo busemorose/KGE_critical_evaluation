@@ -1,7 +1,9 @@
 ---
 title: "Technical note: When best is the enemy of good – critical evaluation of performance criteria in hydrological models"
 author: "Guillaume Cinkus, Naomi Mazzilli, Hervé Jourde, Andreas Wunsch, Tanja Liesch, Nataša Ravbar, Zhao Chen, and Nico Goldscheider"
-format: gfm
+format: 
+  gfm: 
+    toc: true
 execute: 
   warning: false
   eval: false
@@ -109,6 +111,10 @@ syn2 |>
 ```
 
 ![](img/figure01.png){#fig-fig01}
+
+## Figure 2
+
+## Figure 3
 
 ## Figure 4
 

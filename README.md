@@ -4,6 +4,21 @@ performance criteria in hydrological models
 Guillaume Cinkus, Naomi Mazzilli, Hervé Jourde, Andreas Wunsch, Tanja
 Liesch, Nataša Ravbar, Zhao Chen, and Nico Goldscheider
 
+- <a href="#description" id="toc-description">Description</a>
+- <a href="#prerequisites" id="toc-prerequisites">Prerequisites</a>
+- <a href="#synthetic-time-series"
+  id="toc-synthetic-time-series">Synthetic time series</a>
+  - <a href="#figure-1" id="toc-figure-1">Figure 1</a>
+  - <a href="#figure-2" id="toc-figure-2">Figure 2</a>
+  - <a href="#figure-3" id="toc-figure-3">Figure 3</a>
+  - <a href="#figure-4" id="toc-figure-4">Figure 4</a>
+  - <a href="#figure-5" id="toc-figure-5">Figure 5</a>
+- <a href="#hydrological-models" id="toc-hydrological-models">Hydrological
+  models</a>
+  - <a href="#karstmod" id="toc-karstmod">KarstMod</a>
+  - <a href="#anns" id="toc-anns">ANNs</a>
+- <a href="#references" id="toc-references">References</a>
+
 Author ORCIDs:
 
 - Guillaume Cinkus
@@ -108,6 +123,10 @@ syn2 |>
 ```
 
 <img src="img/figure01.png" id="fig-fig01" />
+
+## Figure 2
+
+## Figure 3
 
 ## Figure 4
 
