@@ -39,9 +39,13 @@ This repository contains the following elements:
 # Prerequisites
 
 ```{r}
-# Packages
+# R packages
 library(reticulate)
 library(hydroGOF) # for KGE and KGE'
+library(dplyr)
+library(ggplot2)
+
+# Python packages
 de <- reticulate::import("de") # diaf-eff Python package
 hydroErr <- reticulate::import("HydroErr") # HydroEff Python package
 
@@ -64,8 +68,44 @@ de <- reticulate::py_run_file("script/de.py")
 ## syn2: two consecutive events
 source("script/Synthetic time series/syn_flood_event.R")
 
-
+# Define omega bounds
+omega_log_min <- -0.36
+omega_log_max <- 0.36
 ```
+
+## Figure 1
+
+```{r}
+# Calculate omega bounds (min/max)
+omega_min <- 10^(omega_log_min)
+omega_max <- 10^(omega_log_max)
+
+# Create min and max transformed time series
+model_min <- c(syn2$discharge * omega_min)
+model_max <- c(syn2$discharge * omega_max)
+
+syn2 |> 
+  mutate(model_min, model_max) |> 
+  ggplot(aes(t, discharge)) +
+  geom_ribbon(aes(ymin = model_min, 
+                  ymax = model_max, 
+                  fill = "Set of transformed time series")) +
+  geom_line(aes(color = "Reference time series")) +
+  scale_color_manual(name = "", values = "black") +
+  scale_fill_manual(name = "", values = "lightgrey") +
+  xlab("Time [T]") +
+  ylab(expression(paste("Discharge [L"^3~T^-1, "]"))) +
+  coord_cartesian(xlim = c(0, 40)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = "bottom",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+
+## Figure 3
+
+
 
 
 # Hydrological models
