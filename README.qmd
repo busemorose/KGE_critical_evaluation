@@ -43,6 +43,7 @@ This repository contains the following elements:
 library(reticulate)
 library(hydroGOF) # for KGE and KGE'
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 
 # Python packages
@@ -52,6 +53,7 @@ hydroErr <- reticulate::import("HydroErr") # HydroEff Python package
 # Functions
 source("script/utils.R")
 source("script/run_eval.R")
+source("script/cblind_bw_palette.R")
 ```
 
 ```{r}
@@ -103,7 +105,39 @@ syn2 |>
         panel.grid.minor = element_blank())
 ```
 
-## Figure 3
+## Figure 4
+
+```{r}
+source("script/Synthetic time series/plot_model_distribution.R")
+
+# Vector of criteria to study
+criteria <- c("kge", "kge_m", "kge_m2", "kgenp", "de", "lme", "nse", "dr", "lce")
+
+# Generate plot
+plot_model_distribution(data = syn1,
+                        perf_c = criteria,
+                        ncol = 3,
+                        omega_log_min = omega_log_min,
+                        omega_log_max = omega_log_max,
+                        step = 0.01)
+```
+
+## Figure 5
+
+```{r}
+source("script/Synthetic time series/plot_omega_vs_omega2.R")
+
+# Vector of criteria to study
+criteria <- c("kge", "kge_m", "kge_m2", "kgenp", "de", "lme", "nse", "dr", "lce")
+
+# Generate plot
+plot_omega_vs_omega2(data = syn1,
+                     perf_c = criteria,
+                     omega_log_min = omega_log_min,
+                     omega_log_max = omega_log_max,
+                     step = 0.01)
+```
+
 
 
 
