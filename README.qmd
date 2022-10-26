@@ -2,6 +2,9 @@
 title: "Technical note: When best is the enemy of good – critical evaluation of performance criteria in hydrological models"
 author: "Guillaume Cinkus, Naomi Mazzilli, Hervé Jourde, Andreas Wunsch, Tanja Liesch, Nataša Ravbar, Zhao Chen, and Nico Goldscheider"
 format: gfm
+execute: 
+  warning: false
+  eval: false
 ---
 
 Author ORCIDs:
@@ -105,6 +108,8 @@ syn2 |>
         panel.grid.minor = element_blank())
 ```
 
+![](img/figure01.png){#fig-fig01}
+
 ## Figure 4
 
 ```{r}
@@ -119,8 +124,10 @@ plot_model_distribution(data = syn1,
                         ncol = 3,
                         omega_log_min = omega_log_min,
                         omega_log_max = omega_log_max,
-                        step = 0.01)
+                        step = 0.002)
 ```
+
+![](img/figure04.png){#fig-fig04}
 
 ## Figure 5
 
@@ -135,12 +142,10 @@ plot_omega_vs_omega2(data = syn1,
                      perf_c = criteria,
                      omega_log_min = omega_log_min,
                      omega_log_max = omega_log_max,
-                     step = 0.01)
+                     step = 0.002)
 ```
 
-
-
-
+![](img/figure05.png){#fig-fig05}
 
 # Hydrological models
 

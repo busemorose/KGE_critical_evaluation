@@ -26,6 +26,17 @@ Author ORCIDs:
 
 This repository contains the following elements:
 
+- `/script/utils.R` custom scripts for some performance criterion
+  - KGE and KGE’: *hydroGOF* R package (Zambrano-Bigiarini, 2020)
+  - KGE<sub>NP</sub>: supplementary material from Pool et al. (2018)
+  - DE’: *diag-eff* Python package (Schwemmle et al., 2021)
+  - d<sub>r</sub>: *HydroErr* Python package (Roberts et al., 2018)
+  - KGE’’, LME, LCE and NSE: custom code
+  - KGE_sf: custom code for using KGE with scaling factors
+- `/script/run_eval.R`
+- `/script/Synthetic time series`
+  - `syn_flood_event.R`: Synthetic time series of a flood event (syn1)
+    or two consecutive flood events (syn2).
 - `/script/ANN model`: ANN model code
   - Python script to run the ANN model
   - Dummy data file to illustrate the structure of input data
@@ -33,7 +44,107 @@ This repository contains the following elements:
   - KarstMod `.properties` file
   - R script to perform the snow routine
 
+# Prerequisites
+
+``` r
+# R packages
+library(reticulate)
+library(hydroGOF) # for KGE and KGE'
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Python packages
+de <- reticulate::import("de") # diaf-eff Python package
+hydroErr <- reticulate::import("HydroErr") # HydroEff Python package
+
+# Functions
+source("script/utils.R")
+source("script/run_eval.R")
+source("script/cblind_bw_palette.R")
+```
+
 # Synthetic time series
+
+``` r
+# Import synthetic time series of flood events
+## syn1: one event
+## syn2: two consecutive events
+source("script/Synthetic time series/syn_flood_event.R")
+
+# Define omega bounds
+omega_log_min <- -0.36
+omega_log_max <- 0.36
+```
+
+## Figure 1
+
+``` r
+# Calculate omega bounds (min/max)
+omega_min <- 10^(omega_log_min)
+omega_max <- 10^(omega_log_max)
+
+# Create min and max transformed time series
+model_min <- c(syn2$discharge * omega_min)
+model_max <- c(syn2$discharge * omega_max)
+
+syn2 |> 
+  mutate(model_min, model_max) |> 
+  ggplot(aes(t, discharge)) +
+  geom_ribbon(aes(ymin = model_min, 
+                  ymax = model_max, 
+                  fill = "Set of transformed time series")) +
+  geom_line(aes(color = "Reference time series")) +
+  scale_color_manual(name = "", values = "black") +
+  scale_fill_manual(name = "", values = "lightgrey") +
+  xlab("Time [T]") +
+  ylab(expression(paste("Discharge [L"^3~T^-1, "]"))) +
+  coord_cartesian(xlim = c(0, 40)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  theme_bw(base_size = 16) +
+  theme(legend.position = "bottom",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+
+<img src="img/figure01.png" id="fig-fig01" />
+
+## Figure 4
+
+``` r
+source("script/Synthetic time series/plot_model_distribution.R")
+
+# Vector of criteria to study
+criteria <- c("kge", "kge_m", "kge_m2", "kgenp", "de", "lme", "nse", "dr", "lce")
+
+# Generate plot
+plot_model_distribution(data = syn1,
+                        perf_c = criteria,
+                        ncol = 3,
+                        omega_log_min = omega_log_min,
+                        omega_log_max = omega_log_max,
+                        step = 0.002)
+```
+
+<img src="img/figure04.png" id="fig-fig04" />
+
+## Figure 5
+
+``` r
+source("script/Synthetic time series/plot_omega_vs_omega2.R")
+
+# Vector of criteria to study
+criteria <- c("kge", "kge_m", "kge_m2", "kgenp", "de", "lme", "nse", "dr", "lce")
+
+# Generate plot
+plot_omega_vs_omega2(data = syn1,
+                     perf_c = criteria,
+                     omega_log_min = omega_log_min,
+                     omega_log_max = omega_log_max,
+                     step = 0.002)
+```
+
+<img src="img/figure05.png" id="fig-fig05" />
 
 # Hydrological models
 
@@ -101,3 +212,23 @@ https://doi.org/10.1016/j.envsoft.2017.03.015, 2019b.
 Pianosi, F., Sarrazin, F., and Wagener, T.: A Matlab toolbox for Global
 Sensitivity Analysis, Environmental Modelling & Software, 70, 80–85,
 https://doi.org/10.1016/j.envsoft.2015.04.009, 2015.
+
+Pool, S., Vis, M., and Seibert, J.: Evaluating model performance:
+towards a non-parametric variant of the Kling-Gupta efficiency, Hydrol.
+Sci. J., 63, 1941–1953, https://doi.org/10.1080/02626667.2018.1552002,
+2018.
+
+Roberts, W., Williams, G., Jackson, E., Nelson, E., Ames, D.:
+Hydrostats: A Python Package for Characterizing Errors between Observed
+and Predicted Time Series. Hydrology 5(4) 66,
+doi:10.3390/hydrology5040066, 2018.
+
+Schwemmle, R., Demand, D., and Weiler, M.: Technical note: Diagnostic
+efficiency – specific evaluation of model performance, Hydrol. Earth
+Syst. Sci., 25, 2187–2198, https://doi.org/10.5194/hess-25-2187-2021,
+2021.
+
+Zambrano-Bigiarini M.: hydroGOF: Goodness-of-fit functions for
+comparison of simulated and observed hydrological time series. R package
+version 0.4-0. https://github.com/hzambran/hydroGOF.
+DOI:10.5281/zenodo.839854, 2020.
