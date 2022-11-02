@@ -1,0 +1,8 @@
+date;Qobs;PET;T;rH;P_postojna;S_postojna;nS_postojna;P_cerknica;S_cerknica;nS_cerknica;P_thiessen;SR_precip
+1961-01-02;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan
+.
+.
+.
+.
+.
+2018-12-31;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan
